@@ -1,3 +1,4 @@
+import { Global } from "@emotion/react";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import {
   GetSiweMessageOptions,
@@ -11,6 +12,7 @@ import type { AppProps, AppType } from "next/app";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { globalStyle } from "../components/GlobalStyle";
 import { trpc } from "../utils/trpc";
 
 const { chains, provider } = configureChains(
@@ -50,6 +52,7 @@ const App: AppType<{ session: Session | null }> = ({
         >
           <RainbowKitProvider chains={chains}>
             <QueryClientProvider client={queryClient}>
+              <Global styles={globalStyle} />
               <Component {...pageProps} />
             </QueryClientProvider>
           </RainbowKitProvider>

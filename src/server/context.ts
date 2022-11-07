@@ -1,17 +1,22 @@
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { IncomingMessage, ServerResponse } from "http";
 import { type Session } from "next-auth";
 import { prisma } from "./db";
 import { getServerAuthSession } from "./get-server-auth-session";
 
 type CreateContextOptions = {
   session: Session | null;
+  req: IncomingMessage;
+  res: ServerResponse<IncomingMessage>;
 };
 
 export const createContextInner = async (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    req: opts.req,
+    res: opts.res,
   };
 };
 
@@ -22,6 +27,8 @@ export const createContext = async (opts: CreateNextContextOptions) => {
 
   return await createContextInner({
     session,
+    req,
+    res,
   });
 };
 

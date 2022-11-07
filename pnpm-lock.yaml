@@ -9,17 +9,22 @@ specifiers:
   '@prisma/client': ^4.5.0
   '@rainbow-me/rainbowkit': ^0.7.4
   '@rainbow-me/rainbowkit-siwe-next-auth': ^0.1.4
+  '@sendgrid/mail': ^7.7.0
   '@stripe/stripe-js': ^1.42.1
   '@tanstack/react-query': ^4.14.5
   '@trpc/client': 10.0.0-proxy-beta.26
   '@trpc/next': 10.0.0-proxy-beta.26
   '@trpc/react-query': 10.0.0-proxy-beta.26
   '@trpc/server': 10.0.0-proxy-beta.26
+  '@types/common-tags': ^1.8.1
+  '@types/cors': ^2.8.12
   '@types/micro-cors': ^0.1.2
   '@types/node': 18.11.9
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.8
   alchemy-sdk: ^2.2.0
+  common-tags: ^1.8.2
+  cors: ^2.8.5
   cross-fetch: ^3.1.5
   eslint: 8.27.0
   eslint-config-next: 13.0.2
@@ -47,6 +52,7 @@ dependencies:
   '@prisma/client': 4.5.0_prisma@4.5.0
   '@rainbow-me/rainbowkit': 0.7.4_qbz5s6f53eyaqqjxkxt6sfpape
   '@rainbow-me/rainbowkit-siwe-next-auth': 0.1.4_rl6nhsndxguscycjlpju3xb6vu
+  '@sendgrid/mail': 7.7.0
   '@stripe/stripe-js': 1.42.1
   '@tanstack/react-query': 4.14.5_2so4eo66zr774rftk5qlya5ltu
   '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
@@ -54,6 +60,8 @@ dependencies:
   '@trpc/react-query': 10.0.0-proxy-beta.26_2be7eocbg4gtia3zrbea4heuwy
   '@trpc/server': 10.0.0-proxy-beta.26
   alchemy-sdk: 2.2.0
+  common-tags: 1.8.2
+  cors: 2.8.5
   cross-fetch: 3.1.5
   ethers: 5.7.2
   graphql: 16.6.0
@@ -74,6 +82,8 @@ devDependencies:
   '@graphql-codegen/cli': 2.13.7_5r3mmcyz2qxsj6cwjz753kl35e
   '@graphql-codegen/client-preset': 1.0.7_graphql@16.6.0
   '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+  '@types/common-tags': 1.8.1
+  '@types/cors': 2.8.12
   '@types/micro-cors': 0.1.2
   '@types/node': 18.11.9
   '@types/react': 18.0.25
@@ -3054,6 +3064,33 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
 
+  /@sendgrid/client/7.7.0:
+    resolution: {integrity: sha512-SxH+y8jeAQSnDavrTD0uGDXYIIkFylCo+eDofVmZLQ0f862nnqbC3Vd1ej6b7Le7lboyzQF6F7Fodv02rYspuA==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/helpers': 7.7.0
+      axios: 0.26.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@sendgrid/helpers/7.7.0:
+    resolution: {integrity: sha512-3AsAxfN3GDBcXoZ/y1mzAAbKzTtUZ5+ZrHOmWQ279AuaFXUNCh9bPnRpN504bgveTqoW+11IzPg3I0WVgDINpw==}
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      deepmerge: 4.2.2
+    dev: false
+
+  /@sendgrid/mail/7.7.0:
+    resolution: {integrity: sha512-5+nApPE9wINBvHSUxwOxkkQqM/IAAaBYoP9hw7WwgDNQPxraruVqHizeTitVtKGiqWCKm2mnjh4XGN3fvFLqaw==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/client': 7.7.0
+      '@sendgrid/helpers': 7.7.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /@sideway/address/4.1.4:
     resolution: {integrity: sha512-7vwq+rOHVWjyXxVlR76Agnvhy8I9rpzjosTESvmhNeXOXdZZB15Fl+TI9x1SiHZH5Jv2wTGduSxFDIaq0m3DUw==}
     dependencies:
@@ -3270,11 +3307,19 @@ packages:
       '@types/node': 18.11.9
     dev: false
 
+  /@types/common-tags/1.8.1:
+    resolution: {integrity: sha512-20R/mDpKSPWdJs5TOpz3e7zqbeCNuMCPhV7Yndk9KU2Rbij2r5W4RzwDPkzC+2lzUqXYu9rFzTktCBnDjHuNQg==}
+    dev: true
+
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 18.11.9
     dev: false
+
+  /@types/cors/2.8.12:
+    resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}
+    dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
@@ -4712,7 +4757,6 @@ packages:
   /common-tags/1.8.2:
     resolution: {integrity: sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==}
     engines: {node: '>=4.0.0'}
-    dev: true
 
   /commondir/1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
@@ -4811,6 +4855,14 @@ packages:
 
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
+    dev: false
+
+  /cors/2.8.5:
+    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
     dev: false
 
   /cosmiconfig-toml-loader/1.0.0:

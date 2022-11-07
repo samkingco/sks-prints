@@ -16,7 +16,6 @@ model Order {
 
   stripeId String  @db.VarChar(255)
   wallet   String
-  project  Project @default(UNKNOWN)
   token    Token[]
 }
 
@@ -27,8 +26,9 @@ enum Project {
 }
 
 model Token {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   tokenId Int
+  project Project @default(UNKNOWN)
 
   order   Order  @relation(fields: [orderId], references: [id])
   orderId String
