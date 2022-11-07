@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps, AppType } from "next/app";
+import Script from "next/script";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -78,6 +79,13 @@ const App: AppType<{ session: Session | null }> = ({
             <QueryClientProvider client={queryClient}>
               <Global styles={globalStyle} />
               <Component {...pageProps} />
+
+              <Script
+                defer
+                data-domain="prints.samking.studio"
+                src="https://plausible.io/js/plausible.js"
+                strategy="afterInteractive"
+              />
             </QueryClientProvider>
           </RainbowKitProvider>
         </RainbowKitSiweNextAuthProvider>
