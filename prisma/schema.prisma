@@ -1,0 +1,35 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stripeId String  @db.VarChar(255)
+  wallet   String
+  project  Project @default(UNKNOWN)
+  token    Token[]
+}
+
+enum Project {
+  UNKNOWN
+  ROOTS
+  ICE64
+}
+
+model Token {
+  id      String @id @default(uuid())
+  tokenId Int
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+}
