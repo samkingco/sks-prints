@@ -30,7 +30,7 @@ export const stripeRouter = router({
         const ownedTokensRes = await rootsSubgraph.request(
           ownedTokensDocument,
           {
-            owner: address,
+            owner: address.toLowerCase(),
           }
         );
 

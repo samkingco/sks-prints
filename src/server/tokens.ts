@@ -22,7 +22,6 @@ export const tokensRouter = router({
     .input(z.object({ project: ProjectEnum, address: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       const owner = ctx.session.address;
-      console.log({ owner });
 
       if (!owner || !input.address || owner !== input.address) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -32,7 +31,7 @@ export const tokensRouter = router({
         const ownedTokensRes = await rootsSubgraph.request(
           ownedTokensDocument,
           {
-            owner,
+            owner: owner.toLowerCase(),
           }
         );
 
