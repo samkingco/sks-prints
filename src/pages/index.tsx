@@ -10,7 +10,11 @@ import getStripe from "../utils/stripe";
 import { trpc } from "../utils/trpc";
 
 const Layout = styled.main`
-  padding: 2em 2em 6em;
+  padding: 2em 1em 6em;
+
+  @media (min-width: 36rem) {
+    padding: 2em 2em 6em;
+  }
 `;
 
 const Header = styled.header`
@@ -141,7 +145,7 @@ export default function Home() {
       <SocialMeta />
       <Header>
         <Title>Prints</Title>
-        <Mono as="h2" margin="-4 0 24" uppercase subdued>
+        <Mono margin="-4 0 24" uppercase subdued>
           Giclée prints for holders of{" "}
           <a href="https://roots.samking.photo">Roots</a> NFTs
         </Mono>

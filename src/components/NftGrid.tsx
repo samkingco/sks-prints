@@ -13,15 +13,16 @@ const Grid = styled.article`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: max-content;
-  grid-gap: 2em;
+  grid-gap: 1em;
   align-items: start;
 
   @media (min-width: 40rem) {
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 3em;
+    grid-gap: 2em;
   }
   @media (min-width: 56rem) {
     grid-template-columns: repeat(4, 1fr);
+    grid-gap: 3em;
   }
   @media (min-width: 72rem) {
     grid-template-columns: repeat(5, 1fr);
