@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { Button } from "../components/Button";
+import SocialMeta from "../components/SocialMeta";
 import { Mono, Title } from "../components/Typography";
 
 const Layout = styled.main`
@@ -21,6 +22,7 @@ export default function Success() {
 
   return (
     <Layout>
+      <SocialMeta title="Order successful" />
       <Content>
         <Title>Order successful</Title>
         <Mono margin="0 0 24">
