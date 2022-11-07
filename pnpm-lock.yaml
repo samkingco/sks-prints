@@ -8,6 +8,7 @@ specifiers:
   '@graphql-typed-document-node/core': 3.1.1
   '@prisma/client': ^4.5.0
   '@rainbow-me/rainbowkit': ^0.7.4
+  '@rainbow-me/rainbowkit-siwe-next-auth': ^0.1.4
   '@stripe/stripe-js': ^1.42.1
   '@tanstack/react-query': ^4.14.5
   '@trpc/client': 10.0.0-proxy-beta.26
@@ -45,6 +46,7 @@ dependencies:
   '@emotion/styled': 11.10.5_hmjty4frusbltjhl3xd7udcm2y
   '@prisma/client': 4.5.0_prisma@4.5.0
   '@rainbow-me/rainbowkit': 0.7.4_qbz5s6f53eyaqqjxkxt6sfpape
+  '@rainbow-me/rainbowkit-siwe-next-auth': 0.1.4_rl6nhsndxguscycjlpju3xb6vu
   '@stripe/stripe-js': 1.42.1
   '@tanstack/react-query': 4.14.5_2so4eo66zr774rftk5qlya5ltu
   '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
@@ -2783,6 +2785,21 @@ packages:
   /@prisma/engines/4.5.0:
     resolution: {integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==}
     requiresBuild: true
+
+  /@rainbow-me/rainbowkit-siwe-next-auth/0.1.4_rl6nhsndxguscycjlpju3xb6vu:
+    resolution: {integrity: sha512-wW4/yhMjYImaHWeg9CvZB/6ZbmwVA0BfDWmvqgG8yzkkxta4cGFA9glTqlq/+fsgAkXqdjBy7pYoidcIDpmTCA==}
+    engines: {node: '>=12.4'}
+    peerDependencies:
+      '@rainbow-me/rainbowkit': 0.5.x || 0.6.x || 0.7.x
+      next-auth: ^4.10.2
+      react: '>=17'
+      siwe: ^1.1.6
+    dependencies:
+      '@rainbow-me/rainbowkit': 0.7.4_qbz5s6f53eyaqqjxkxt6sfpape
+      next-auth: 4.16.3_pknogjuzx4bv7zxtatcb2ahtsq
+      react: 18.2.0
+      siwe: 1.1.6_ethers@5.7.2
+    dev: false
 
   /@rainbow-me/rainbowkit/0.7.4_qbz5s6f53eyaqqjxkxt6sfpape:
     resolution: {integrity: sha512-o3kwaHZw9O40gfK2DamJZzoqPbK7EHC+8++QtFy5AQ0Sw5P+U0tzb/87KHatSIXyIwrZTEGD0uciPjCGikJMjg==}
