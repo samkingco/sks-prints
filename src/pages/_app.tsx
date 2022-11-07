@@ -1,5 +1,10 @@
 import { Global } from "@emotion/react";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  getDefaultWallets,
+  lightTheme,
+  midnightTheme,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 import {
   GetSiweMessageOptions,
   RainbowKitSiweNextAuthProvider,
@@ -50,7 +55,26 @@ const App: AppType<{ session: Session | null }> = ({
         <RainbowKitSiweNextAuthProvider
           getSiweMessageOptions={getSiweMessageOptions}
         >
-          <RainbowKitProvider chains={chains}>
+          <RainbowKitProvider
+            chains={chains}
+            modalSize="compact"
+            theme={{
+              darkMode: lightTheme({
+                accentColor: "black",
+                accentColorForeground: "white",
+                borderRadius: "medium",
+                fontStack: "system",
+                overlayBlur: "small",
+              }),
+              lightMode: midnightTheme({
+                accentColor: "white",
+                accentColorForeground: "black",
+                borderRadius: "medium",
+                fontStack: "system",
+                overlayBlur: "small",
+              }),
+            }}
+          >
             <QueryClientProvider client={queryClient}>
               <Global styles={globalStyle} />
               <Component {...pageProps} />
