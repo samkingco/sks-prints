@@ -4,6 +4,7 @@ import { buffer } from "micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { prisma } from "../../server/db";
+import { printClaimEmbed, sendDiscordMessage } from "../../server/discord";
 import {
   sendOrderSuccessCustomerEmail,
   sendOrderSuccessStudioEmail,
@@ -88,7 +89,44 @@ export default async function webhookHandler(
           },
         });
 
-        await sendOrderSuccessStudioEmail(paymentIntent.id, project, tokenIds);
+        // Send order success email to studio email
+        try {
+          await sendOrderSuccessStudioEmail(
+            paymentIntent.id,
+            project,
+            tokenIds
+          );
+        } catch (error) {
+          console.error(error);
+        }
+
+        // Post to discord
+        try {
+          let ens = address;
+          const ensRes = await fetch(
+            `https://api.ensideas.com/ens/resolve/${address}`
+          );
+
+          if (ensRes.ok) {
+            const ensJson = await ensRes.json();
+            ens = ensJson.displayName;
+          }
+
+          for (const id of tokenIds) {
+            await sendDiscordMessage(project, {
+              embeds: [
+                printClaimEmbed({
+                  project: project,
+                  tokenId: id,
+                  claimedEns: ens,
+                  claimedAddress: address,
+                }),
+              ],
+            });
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       // Return a response to acknowledge receipt of the event.
