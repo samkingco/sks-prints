@@ -16,11 +16,13 @@ const Grid = styled.article`
   grid-gap: 1em;
   align-items: start;
 
-  @media (min-width: 40rem) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 36rem) {
     grid-gap: 2em;
   }
-  @media (min-width: 56rem) {
+  @media (min-width: 40rem) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 58rem) {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 3em;
   }
@@ -40,9 +42,13 @@ const Empty = styled.div`
 
 const Token = styled.div`
   display: grid;
-  grid-template-columns: 1fr max-content;
-  grid-gap: 1em;
+  grid-template-columns: max-content 1fr;
   grid-template-areas: "image image" "name claimed";
+  grid-gap: 0.5em;
+
+  @media (min-width: 48rem) {
+    grid-row-gap: 1em;
+  }
 `;
 
 interface TokenButtonProps {
@@ -186,9 +192,7 @@ export function NftGrid({ project, selected, onSelect, showForOwner }: Props) {
                   priority={token.id < 4}
                 />
               </TokenButton>
-              <TokenName uppercase subdued={!isAvailable}>
-                {token.name}
-              </TokenName>
+              <TokenName uppercase>#{token.id}</TokenName>
               <TokenInfo uppercase subdued={!isAvailable}>
                 {tokenInfoText}
               </TokenInfo>
