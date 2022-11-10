@@ -1,29 +1,30 @@
 import { Project } from "@prisma/client";
+import { Client } from "@upstash/qstash";
 import Cors from "cors";
 import { buffer } from "micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { prisma } from "../../server/db";
-import { printClaimEmbed, sendDiscordMessage } from "../../server/discord";
-import {
-  sendOrderSuccessCustomerEmail,
-  sendOrderSuccessStudioEmail,
-} from "../../server/email";
-
-// Stripe requires the raw body to construct the event.
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2022-08-01",
 });
 
+const qstash = new Client({
+  token: process.env.QSTASH_TOKEN || "",
+});
+
 const cors = Cors({
   methods: ["POST", "HEAD"],
 });
+
+export interface PostStripeMessage {
+  customerEmail?: string;
+  stripeId: string;
+  address: string;
+  project: Project;
+  tokenIds: number[];
+}
 
 export default async function webhookHandler(
   req: NextApiRequest,
@@ -55,20 +56,24 @@ export default async function webhookHandler(
         return;
       }
 
+      const message: PostStripeMessage = {
+        stripeId: "",
+        address: "",
+        project: "UNKNOWN",
+        tokenIds: [],
+      };
+
       if (event.type === "checkout.session.completed") {
         const session = event.data.object as any;
-        const email = session.customer_details.email as string;
-        if (email) {
-          await sendOrderSuccessCustomerEmail(email);
-        }
+        message.customerEmail = session.customer_details.email as string;
       }
 
       // Cast event data to Stripe object and save in DB
       if (event.type === "payment_intent.succeeded") {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        const address = paymentIntent.metadata.address as string;
-        const project = paymentIntent.metadata.project as Project;
-        const tokenIds = paymentIntent.metadata.tokenIds
+        message.address = paymentIntent.metadata.address as string;
+        message.project = paymentIntent.metadata.project as Project;
+        message.tokenIds = paymentIntent.metadata.tokenIds
           .split(",")
           .map((i) => parseInt(i, 10))
           .sort();
@@ -77,10 +82,13 @@ export default async function webhookHandler(
         await prisma.order.create({
           data: {
             stripeId: paymentIntent.id,
-            wallet: address,
+            wallet: message.address,
             token: {
               createMany: {
-                data: tokenIds.map((id) => ({ tokenId: id, project })),
+                data: message.tokenIds.map((id) => ({
+                  tokenId: id,
+                  project: message.project,
+                })),
               },
             },
           },
@@ -88,46 +96,13 @@ export default async function webhookHandler(
             token: true,
           },
         });
-
-        // Send order success email to studio email
-        try {
-          await sendOrderSuccessStudioEmail(
-            paymentIntent.id,
-            project,
-            tokenIds
-          );
-        } catch (error) {
-          console.error(error);
-        }
-
-        // Post to discord
-        try {
-          let ens = address;
-          const ensRes = await fetch(
-            `https://api.ensideas.com/ens/resolve/${address}`
-          );
-
-          if (ensRes.ok) {
-            const ensJson = await ensRes.json();
-            ens = ensJson.displayName;
-          }
-
-          for (const id of tokenIds) {
-            await sendDiscordMessage(project, {
-              embeds: [
-                printClaimEmbed({
-                  project: project,
-                  tokenId: id,
-                  claimedEns: ens,
-                  claimedAddress: address,
-                }),
-              ],
-            });
-          }
-        } catch (error) {
-          console.error(error);
-        }
       }
+
+      // Post message to upstash
+      await qstash.publishJSON({
+        topic: "sks-prints-stripe-success",
+        body: message,
+      });
 
       // Return a response to acknowledge receipt of the event.
       return res.json({ received: true });
@@ -145,11 +120,14 @@ function runMiddleware(
 ) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-
+      if (result instanceof Error) return reject(result);
       return resolve(result);
     });
   });
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

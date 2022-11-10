@@ -15,7 +15,7 @@ function makeChannelId(channelId: string) {
 }
 
 export const projectDiscordChannels: Record<ProjectType, string | undefined> = {
-  UNKNOWN: undefined,
+  UNKNOWN: MODS_CHANNEL_ID,
   ROOTS: makeChannelId(ROOTS_CHANNEL_ID),
   ICE64: makeChannelId(ICE64_CHANNEL_ID),
 };

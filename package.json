@@ -24,6 +24,7 @@
     "@trpc/next": "10.0.0-proxy-beta.26",
     "@trpc/react-query": "10.0.0-proxy-beta.26",
     "@trpc/server": "10.0.0-proxy-beta.26",
+    "@upstash/qstash": "^0.1.8",
     "alchemy-sdk": "^2.2.0",
     "common-tags": "^1.8.2",
     "cors": "^2.8.5",
