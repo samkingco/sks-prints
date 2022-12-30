@@ -1,13 +1,7 @@
 import styled from "@emotion/styled";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { Button } from "../components/Button";
-import { CustomConnectButton } from "../components/CustomConnectButton";
-import { NftGrid } from "../components/NftGrid";
+import Link from "next/link";
 import SocialMeta from "../components/SocialMeta";
-import { Heading, Mono, subdued, Title } from "../components/Typography";
-import getStripe from "../utils/stripe";
-import { trpc } from "../utils/trpc";
+import { Mono, subdued, Title } from "../components/Typography";
 
 const Layout = styled.main`
   padding: 2em 1em 6em;
@@ -27,6 +21,7 @@ const Header = styled.header`
   background-size: 8px 1px;
   background-repeat: repeat-x;
   padding-bottom: 2em;
+  margin-bottom: 2em;
 
   p {
     max-width: 48em;
@@ -100,133 +95,24 @@ const Checkout = styled.form`
 `;
 
 export default function Home() {
-  const { data: session } = useSession();
-  const [onlyMine, setOnlyMine] = useState(false);
-  const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
-  const [selectedRootsIds, setSelectedRootsIds] = useState<number[]>([]);
-  const { mutateAsync, isLoading } = trpc.stripe.checkoutSession.useMutation();
-
-  const onSelect = (id: number) => {
-    if (selectedRootsIds.includes(id)) {
-      setSelectedRootsIds((s) => s.filter((i) => i !== id));
-    } else {
-      setSelectedRootsIds((s) => [...s, id]);
-    }
-  };
-
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-    try {
-      const session = await mutateAsync({
-        project: "ROOTS",
-        tokens: selectedRootsIds,
-      });
-      if (session) {
-        setIsLoadingCheckout(true);
-        const stripe = await getStripe();
-        const redirect = await stripe?.redirectToCheckout({
-          sessionId: session.id,
-        });
-
-        setIsLoadingCheckout(false);
-        if (redirect && redirect.error) {
-          console.error(redirect.error);
-          return;
-        }
-      }
-    } catch (error) {
-      setIsLoadingCheckout(false);
-      console.error(error);
-    }
-  };
-
   return (
     <Layout>
       <SocialMeta />
       <Header>
         <Title>Prints</Title>
-        <Mono margin="-4 0 24" uppercase subdued>
+        <Mono margin="-4 0 0" uppercase subdued>
           Giclée prints for holders of{" "}
           <a href="https://roots.samking.photo">Roots</a> NFTs
         </Mono>
-
-        <Mono margin="0 0 8">
-          I want to thank collectors of my work and give back a little something
-          to show my gratitude. Anyone who holds a Roots NFT is now able to
-          claim a print of that NFT. The only cost is postage and packaging.
-        </Mono>
-
-        <Mono margin="0 0 24">
-          If you notice your country is not in the list at checkout, please send
-          an email to <a href="mailto:sam@samking.studio">sam@samking.studio</a>{" "}
-          and I can arrange something.
-        </Mono>
-
-        <Heading margin="0 0 8">Details</Heading>
-        <BulletList>
-          <li>
-            <Mono>
-              Signed 1/1 archival giclée print on Hahnemüle Photo Rag 308gsm
-              paper
-            </Mono>
-          </li>
-          <li>
-            <Mono>370x370mm printed area</Mono>
-          </li>
-          <li>
-            <Mono>480x480mm paper size including 55mm border</Mono>
-          </li>
-          <li>
-            <Mono>Includes certificate of authenticity</Mono>
-          </li>
-          <li>
-            <Mono>Each NFT can be used to claim a print only once</Mono>
-          </li>
-          <li>
-            <Mono>Only claimable by the current NFT owner</Mono>
-          </li>
-          <li>
-            <Mono>Free to claim, just pay postage &amp; packaging</Mono>
-          </li>
-        </BulletList>
       </Header>
 
-      <Buttons>
-        <Wallet>
-          <CustomConnectButton />
-        </Wallet>
-
-        <Filter>
-          <Button
-            uppercase
-            variant="secondary"
-            disabled={!session}
-            onClick={() => {
-              setOnlyMine(!onlyMine);
-            }}
-          >
-            {onlyMine ? "Show all" : "Only mine"}
-          </Button>
-        </Filter>
-
-        <Checkout onSubmit={onSubmit}>
-          <Button
-            disabled={selectedRootsIds.length === 0}
-            isLoading={isLoading || isLoadingCheckout}
-            uppercase
-            type="submit"
-          >
-            Checkout
-          </Button>
-        </Checkout>
-      </Buttons>
-
-      <NftGrid
-        project="ROOTS"
-        selected={selectedRootsIds}
-        onSelect={onSelect}
-        showForOwner={onlyMine}
-      />
+      <Mono margin="0 0 8">
+        This website has been moved. To claim or purchase a print, head to{" "}
+        <Link href="https://roots.samking.photo/prints">
+          roots.samking.photo
+        </Link>
+        .
+      </Mono>
     </Layout>
   );
 }
